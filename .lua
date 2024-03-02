@@ -38,7 +38,7 @@ local function NewLine()
     line.To = Vector2.new(1,1)
     line.Color = Color3.fromRGB(0,255,50)
     line.Thickness = 1.4
-    line.Transparency = 1
+    line.Transparency = 0
     return line
 end
 
@@ -48,7 +48,7 @@ if esp.hitbox == true then
 	espHITBOX.Name = "Hitbox ESP"
 	espHITBOX.FillColor = Color3.new(0,1,0)
 	espHITBOX.OutlineColor = Color3.new(1,1,1)
-	espHITBOX.FillTransparency = 1
+	espHITBOX.FillTransparency = 0
 	espHITBOX.OutlineTransparency = 0
 	espHITBOX.Adornee = str
 	espHITBOX.Parent = str
@@ -63,7 +63,6 @@ for i,v in pairs(workspace["HiddenChests"]:GetDescendants()) do
 			empt:Disconnect()
 		end
 
-		hitboxESP(v)
 		local lines = {
 			trace = NewLine()
 		}
@@ -72,13 +71,14 @@ for i,v in pairs(workspace["HiddenChests"]:GetDescendants()) do
 			local Scale = v.Size.Y/2
 			local Size = Vector3.new(2,3,1.5) * (Scale * 2)
 		    if esp.tracer == true then
-                        local trace = camera:WorldToViewportPoint((v.CFrame * CFrame.new(0,-Size.Y,0)).p)
+                        local trace = camera:WorldToViewportPoint((v.Position * CFrame.new(0,-Size.Y,0)).p)
 
                         lines.trace.From = Vector2.new(camera.ViewportSize.X/2,camera.ViewportSize.Y)
                         lines.trace.To = Vector2.new(trace.X,trace.Y)
                     end
 		end
 		empt = RunService.RenderStepped:Connect(REPLIT)
+		hitboxESP(v)
 	end
 end
 
@@ -88,7 +88,6 @@ workspace["HiddenChests"].DescendantAdded:Connect(function(v)
 		empt:Disconnect()
 	end
 
-	hitboxESP(v)
 	local lines = {
 		trace = NewLine()
 	}
@@ -97,12 +96,13 @@ workspace["HiddenChests"].DescendantAdded:Connect(function(v)
 		local Scale = v.Size.Y/2
 		local Size = Vector3.new(2,3,1.5) * (Scale * 2)
 		if esp.tracer == true then
-			local trace = camera:WorldToViewportPoint((v.CFrame * CFrame.new(0,-Size.Y,0)).p)
+			local trace = camera:WorldToViewportPoint((v.Position * CFrame.new(0,-Size.Y,0)).p)
                         lines.trace.From = Vector2.new(camera.ViewportSize.X/2,camera.ViewportSize.Y)
                         lines.trace.To = Vector2.new(trace.X,trace.Y)
                 end
 	end
 		empt = RunService.RenderStepped:Connect(REPLIT)
+		hitboxESP(v)
     end
 end)
 
