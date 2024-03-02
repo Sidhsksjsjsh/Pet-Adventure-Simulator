@@ -10,6 +10,7 @@ local user = game:GetService("Players").LocalPlayer
 local vendors = {}
 local workspace = game:GetService("Workspace")
 local TweenService = game:GetService("TweenService")
+local npc = {}
 local td = {
          arg = {
              str1 = "1",
@@ -18,6 +19,7 @@ local td = {
 }
 
 lib:AddTable(workspace["EggVendors"],vendors)
+lib:AddTable(workspace["QuestNPCs"],npc)
 
 local function Bring(part)
 	TweenService:Create(part,TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.Out,0,false,0),{CFrame = user.Character.HumanoidRootPart.CFrame}):Play()
@@ -141,12 +143,13 @@ T1:Toggle("Auto collect XP from pet training",false,function(value)
 end)
 
 local lab = {
-	["Chest Name"] = "",
-	["Chest Price"] = 0,
+	["Chest Name"] = "StarterCrate",
+	["Chest Price"] = 5,
 	["Chest Open Amount"] = 1
 }
 
-local indc = T4:Label("Chest indicators\n\nChest name : {%s}\nChest price : {%s}")
+local indc = T4:Label("Chest indicators\n\nChest name : {%s}\nChest price : {%s} Arcane Starts")
+indc:EditLabel("Chest indicators\n\nChest name : " .. lab["Chest Name"] .. "\nChest price : " .. lab["Chest Price"] .. " Arcane Stars")
 
 T4:Dropdown("Select chest",{"StarterCrate","BlueCrate","GreenCrate","RobuxCrate"},function(value)
 	lab["Chest Name"] = value
@@ -185,6 +188,16 @@ T4:Toggle("Open chest",false,function(value)
 			game:GetService("ReplicatedStorage")["Events"]["PlayerOpenEnchantmentCrate"]:FireServer(lab["Chest Name"],lab["Chest Open Amount"])
 	end
 end)
+
+if user.Name == "Rivanda_Cheater" then
+T5:Dropdown("Select NPC",npc,function(value)
+	_G.QNPC = value
+end)
+
+T5:Button("AI NPC Quest Completed",function()
+	k
+end)
+end
 
 workspace["ClientCoinsGems"].ChildAdded:Connect(function(itm)
          if _G.CoinsCol == true then
