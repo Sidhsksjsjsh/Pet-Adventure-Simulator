@@ -143,3 +143,9 @@ workspace["ClientCoinsGems"].ChildAdded:Connect(Function(itm)
                   Bring(itm)
          end
 end)
+
+user["Character"]["HumanoidRootPart"]:GetPropertyChangedSignal("Position"):Connect(function()
+	getChild(workspace["ClientCoinsGems"],function(v)
+                Bring(v)
+        end)
+end)
