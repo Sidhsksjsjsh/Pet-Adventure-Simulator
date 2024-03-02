@@ -3,6 +3,8 @@ local wndw = lib:Window("VIP Turtle Hub V4 - null")
 local T1 = wndw:Tab("Main")
 local T2 = wndw:Tab("Egg")
 local T3 = wndw:Tab("Pet Training")
+local T4 = wndw:Tab("Arcane Chest")
+local T5 = wndw:Tab("Quest")
 
 local user = game:GetService("Players").LocalPlayer
 local vendors = {}
@@ -136,6 +138,52 @@ end)
 
 T1:Toggle("Auto collect XP from pet training",false,function(value)
          _G.CoinsCol = value
+end)
+
+local lab = {
+	["Chest Name"] = "",
+	["Chest Price"] = 0,
+	["Chest Open Amount"] = 1
+}
+
+local indc = T4:Label("Chest indicators\n\nChest name : {%s}\nChest price : {%s}")
+
+T4:Dropdown("Select chest",{"StarterCrate","BlueCrate","GreenCrate","RobuxCrate"},function(value)
+	lab["Chest Name"] = value
+	indc:EditLabel("Chest indicators\n\nChest name : " .. lab["Chest Name"] .. "\nChest price : " .. lab["Chest Price"] .. " Arcane Stars")
+	if lab["Chest Name"] == "StarterCrate" then
+		lab["Chest Price"] = 5
+	elseif lab["Chest Name"] == "BlueCrate" then
+		lab["Chest Price"] = 50
+	elseif lab["Chest Name"] == "GreenCrate" then
+		lab["Chest Price"] = 250
+	else
+		indc:EditLabel("Chest indicators\n\nAI: failed to calculate the price, try again later.")
+	end
+end)
+
+T4:Slider("Open amount",0,50,1,function(value)
+	lab["Chest Open Amount"] = value
+	if lab["Chest Name"] == "StarterCrate" then
+		lab["Chest Price"] = 5 * tonumber(value)
+		indc:EditLabel("Chest indicators\n\nChest name : " .. lab["Chest Name"] .. "\nChest price : " .. lab["Chest Price"] .. " Arcane Stars")
+	elseif lab["Chest Name"] == "BlueCrate" then
+		lab["Chest Price"] = 50 * tonumber(value)
+		indc:EditLabel("Chest indicators\n\nChest name : " .. lab["Chest Name"] .. "\nChest price : " .. lab["Chest Price"] .. " Arcane Stars")
+	elseif lab["Chest Name"] == "GreenCrate" then
+		lab["Chest Price"] = 250 * tonumber(value)
+		indc:EditLabel("Chest indicators\n\nChest name : " .. lab["Chest Name"] .. "\nChest price : " .. lab["Chest Price"] .. " Arcane Stars")
+	else
+		indc:EditLabel("Chest indicators\n\nAI: failed to calculate the price, try again later.")
+	end
+end)
+
+T4:Toggle("Open chest",false,function(value)
+         _G.och = value
+	while wait() do
+		if _G.och == false then break end
+			game:GetService("ReplicatedStorage")["Events"]["PlayerOpenEnchantmentCrate"]:FireServer(lab["Chest Name"],lab["Chest Open Amount"])
+	end
 end)
 
 workspace["ClientCoinsGems"].ChildAdded:Connect(function(itm)
