@@ -5,7 +5,7 @@ local T2 = wndw:Tab("Egg")
 local T3 = wndw:Tab("Pet Training")
 local T4 = wndw:Tab("Arcane Chest")
 local T5 = wndw:Tab("Quest")
-local T6 = wndw:Tab("ESP")
+local T6 = wndw:Tab("ESP & Chest")
 
 local user = game:GetService("Players").LocalPlayer
 local vendors = {}
@@ -13,6 +13,7 @@ local workspace = game:GetService("Workspace")
 local TweenService = game:GetService("TweenService")
 local camera = workspace.CurrentCamera
 local RunService = game:GetService("RunService")
+local normg = workspace.Gravity
 local npc = {}
 local esp = {
 	tracer = false,
@@ -110,6 +111,10 @@ local function Bring(part)
 	TweenService:Create(part,TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.Out,0,false,0),{CFrame = user.Character.HumanoidRootPart.CFrame}):Play()
 end
 
+local function tween(array)
+	TweenService:Create(user.Character.HumanoidRootPart,TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.Out,0,false,0),{CFrame = array}):Play()
+end
+
 local function getChild(str,funct)
          for i,v in pairs(str:GetChildren()) do
                   funct(v)
@@ -149,6 +154,14 @@ task.spawn(function()
 end)
 wait(0.1)
 td.arg.am = 1
+end
+
+local function triggerProximity(str)
+	for i,v in pairs(str:GetDescendants()) do
+		if v:IsA("ProximityPrompt") then
+			fireproximityprompt(v)
+		end
+	end
 end
 
 T1:Toggle("Auto click",false,function(value)
@@ -326,6 +339,37 @@ T6:Toggle("ESP hidden chest",false,function(value)
 			hitboxESP(v)
 		end
 	end
+end)
+
+local world = {
+	["1"] = CFrame.new(-1177,67,3391),
+	["2"] = CFrame.new(-1552,97,2622),
+	["3"] = CFrame.new(-760,101,2688),
+	["4"] = CFrame.new(-594,105,1723),
+	["Middle"] = CFrame.new(-1168,100,2693)
+}
+
+T6:Button("Tween collect all hidden chest",function()
+	workspace.Gravity = 0
+	tween(world["1"])
+	triggerProximity(workspace["HiddenChests"]["1"])
+	wait(1.5)
+	tween(world["Middle"])
+	wait(2)
+	tween(world["2"])
+	triggerProximity(workspace["HiddenChests"]["2"])
+	wait(1.5)
+	tween(world["Middle"])
+	wait(2)
+	tween(world["3"])
+	triggerProximity(workspace["HiddenChests"]["3"])
+	wait(1.5)
+	tween(world["Middle"])
+	wait(2)
+	tween(world["4"])
+	triggerProximity(workspace["HiddenChests"]["4"])
+	wait(1.5)
+	workspace.Gravity = normg
 end)
 
 workspace["ClientCoinsGems"].ChildAdded:Connect(function(itm)
