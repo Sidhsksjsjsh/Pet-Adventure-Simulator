@@ -138,7 +138,7 @@ T1:Toggle("Auto collect XP from obby",false,function(value)
          _G.CoinsCol = value
 end)
 
-workspace["ClientCoinsGems"].ChildAdded:Connect(Function(itm)
+workspace["ClientCoinsGems"].ChildAdded:Connect(function(itm)
          if _G.CoinsCol == true then
                   Bring(itm)
          end
