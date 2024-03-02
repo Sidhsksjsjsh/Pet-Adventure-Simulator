@@ -71,7 +71,7 @@ for i,v in pairs(workspace["HiddenChests"]:GetDescendants()) do
 			local Scale = v.Size.Y/2
 			local Size = Vector3.new(2,3,1.5) * (Scale * 2)
 		    if esp.tracer == true then
-                        local trace = camera:WorldToViewportPoint((v.Position * CFrame.new(0,-Size.Y,0)).p)
+                        local trace = camera:WorldToViewportPoint((v.CFrame * CFrame.new(0,-Size.Y,0)).p)
 
                         lines.trace.From = Vector2.new(camera.ViewportSize.X/2,camera.ViewportSize.Y)
                         lines.trace.To = Vector2.new(trace.X,trace.Y)
@@ -96,7 +96,7 @@ workspace["HiddenChests"].DescendantAdded:Connect(function(v)
 		local Scale = v.Size.Y/2
 		local Size = Vector3.new(2,3,1.5) * (Scale * 2)
 		if esp.tracer == true then
-			local trace = camera:WorldToViewportPoint((v.Position * CFrame.new(0,-Size.Y,0)).p)
+			local trace = camera:WorldToViewportPoint((v.CFrame * CFrame.new(0,-Size.Y,0)).p)
                         lines.trace.From = Vector2.new(camera.ViewportSize.X/2,camera.ViewportSize.Y)
                         lines.trace.To = Vector2.new(trace.X,trace.Y)
                 end
