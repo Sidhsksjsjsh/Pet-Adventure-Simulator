@@ -15,8 +15,8 @@ local camera = workspace.CurrentCamera
 local RunService = game:GetService("RunService")
 local npc = {}
 local esp = {
-	tracer = true,
-	hitbox = true
+	tracer = false,
+	hitbox = false
 }
 
 local td = {
@@ -33,6 +33,7 @@ lib:AddTable(workspace["QuestNPCs"],npc)
 local function NewLine()
     local line = Drawing.new("Line")
     line.Visible = false
+    line.Name = "Chest Line"
     line.From = Vector2.new(0,0)
     line.To = Vector2.new(1,1)
     line.Color = Color3.fromRGB(0,255,50)
@@ -61,7 +62,8 @@ for i,v in pairs(workspace["HiddenChests"]:GetDescendants()) do
 		if empt then
 			empt:Disconnect()
 		end
-		
+
+		hitboxESP(v)
 		local lines = {
 			trace = NewLine()
 		}
@@ -86,6 +88,7 @@ workspace["HiddenChests"].DescendantAdded:Connect(function(v)
 		empt:Disconnect()
 	end
 
+	hitboxESP(v)
 	local lines = {
 		trace = NewLine()
 	}
@@ -315,7 +318,14 @@ T5:Button("AI NPC Quest Completed",function()
 end)
 
 T6:Toggle("ESP hidden chest",false,function(value)
-	k
+	esp.tracer = value
+	esp.hitbox = value
+	for i,v in pairs(workspace["HiddenChests"]:GetDescendants()) do
+		if v:IsA("Line") or v:FindFirstChild("Chest Line") or v.Name:FindFirstChild("Chest Line") then
+			v.Visible = value
+			hitboxESP(v)
+		end
+	end
 end)
 
 workspace["ClientCoinsGems"].ChildAdded:Connect(function(itm)
