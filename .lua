@@ -68,7 +68,7 @@ for i,v in pairs(workspace["HiddenChests"]:GetDescendants()) do
 			trace = NewLine()
 		}
 
-		local function esp()
+		local function REPLIT()
 			local Scale = v.Size.Y/2
 			local Size = Vector3.new(2,3,1.5) * (Scale * 2)
 		    if esp.tracer == true then
@@ -78,7 +78,7 @@ for i,v in pairs(workspace["HiddenChests"]:GetDescendants()) do
                         lines.trace.To = Vector2.new(trace.X,trace.Y)
                     end
 		end
-		empt = RunService.RenderStepped:Connect(esp)
+		empt = RunService.RenderStepped:Connect(REPLIT)
 	end
 end
 
@@ -93,7 +93,7 @@ workspace["HiddenChests"].DescendantAdded:Connect(function(v)
 		trace = NewLine()
 	}
 
-	local function esp()
+	local function REPLIT()
 		local Scale = v.Size.Y/2
 		local Size = Vector3.new(2,3,1.5) * (Scale * 2)
 		if esp.tracer == true then
@@ -102,7 +102,7 @@ workspace["HiddenChests"].DescendantAdded:Connect(function(v)
                         lines.trace.To = Vector2.new(trace.X,trace.Y)
                 end
 	end
-		empt = RunService.RenderStepped:Connect(esp)
+		empt = RunService.RenderStepped:Connect(REPLIT)
     end
 end)
 
