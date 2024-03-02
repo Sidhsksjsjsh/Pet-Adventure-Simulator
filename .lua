@@ -321,7 +321,7 @@ T6:Toggle("ESP hidden chest",false,function(value)
 	esp.tracer = value
 	esp.hitbox = value
 	for i,v in pairs(workspace["HiddenChests"]:GetDescendants()) do
-		if v:IsA("Line") or v.Name:FindFirstChild("Chest Line") or v.Name == "Chest Line" then
+		if v:IsA("Line") or v.Name == "Chest Line" then
 			v.Visible = value
 			hitboxESP(v)
 		end
