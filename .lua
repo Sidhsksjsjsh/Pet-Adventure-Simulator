@@ -14,7 +14,8 @@ local npc = {}
 local td = {
          arg = {
              str1 = "1",
-             str2 = "1"
+             str2 = "1",
+	     am = 0
   }
 }
 
@@ -29,6 +30,41 @@ local function getChild(str,funct)
          for i,v in pairs(str:GetChildren()) do
                   funct(v)
          end
+end
+
+local function UserWarning(str,params)
+	lib:WarnUser(str,{
+		AutoClose = params[1],
+		CanClick = params[2],
+		Duration = params[3]
+	})
+end -- UserWarning("Turtle AI are looking for stray or lost pets",{true,false,10})
+
+local function AI(str)
+task.spawn(function()
+	if td.arg.am == 0 and then
+		if workspace["QuestNPCs"]:FindFirstChild(str) then
+			UserWarning("Turtle AI was reading the dialogue of the quest given by the npc\nStart in 5s",{true,false,5})
+	                wait(5)
+	                game:GetService("ReplicatedStorage")["Events"]["SendNPCQuestData"]:FireServer(str,"yes")
+		        wait(0.5)
+	                UserWarning("Turtle AI are looking for stray or lost pets",{true,false,10})
+	                wait(10)
+	                game:GetService("ReplicatedStorage")["Events"]["PlayerCollectedLostPet"]:FireServer(str)
+		        wait(0.5)
+	                UserWarning("Turtle AI was reading the dialogue given by the npc again\nComplete in 3s",{true,false,3})
+	                wait(3)
+		        game:GetService("ReplicatedStorage")["Events"]["SendNPCQuestData"]:FireServer(str,"yes")
+	                UserWarning("AI Turtle has completed the quest given by the npc\n" .. lib:ColorFonts("Enjoy!","Yellow"),{false,true,10})
+		else
+			UserWarning(lib:ColorFonts("Error","Red") .. "\ncannot find that npc, enter a valid name",{false,true,10})
+		end
+	else
+		UserWarning("The quest is already " .. lib:ColorFonts("COMPLETED","Green"),{false,true,10})
+	end
+end)
+wait(0.1)
+td.arg.am = 1
 end
 
 T1:Toggle("Auto click",false,function(value)
@@ -189,15 +225,13 @@ T4:Toggle("Open chest",false,function(value)
 	end
 end)
 
-if user.Name == "Rivanda_Cheater" then
 T5:Dropdown("Select NPC",npc,function(value)
 	_G.QNPC = value
 end)
 
 T5:Button("AI NPC Quest Completed",function()
-	k
+	AI(_G.QNPC)
 end)
-end
 
 workspace["ClientCoinsGems"].ChildAdded:Connect(function(itm)
          if _G.CoinsCol == true then
