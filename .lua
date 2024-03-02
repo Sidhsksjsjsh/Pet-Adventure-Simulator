@@ -5,11 +5,13 @@ local T2 = wndw:Tab("Egg")
 local T3 = wndw:Tab("Pet Training")
 local T4 = wndw:Tab("Arcane Chest")
 local T5 = wndw:Tab("Quest")
+local T6 = wndw:Tab("ESP")
 
 local user = game:GetService("Players").LocalPlayer
 local vendors = {}
 local workspace = game:GetService("Workspace")
 local TweenService = game:GetService("TweenService")
+local camera = workspace.CurrentCamera
 local npc = {}
 local td = {
          arg = {
