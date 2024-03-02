@@ -7,6 +7,7 @@ local T3 = wndw:Tab("Pet Training")
 local user = game:GetService("Players").LocalPlayer
 local vendors = {}
 local workspace = game:GetService("Workspace")
+local TweenService = game:GetService("TweenService")
 local td = {
          arg = {
              str1 = "1",
@@ -15,6 +16,16 @@ local td = {
 }
 
 lib:AddTable(workspace["EggVendors"],vendors)
+
+local function Bring(part)
+	TweenService:Create(part,TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.Out,0,false,0),{CFrame = user.Character.HumanoidRootPart.CFrame}):Play()
+end
+
+local function getChild(str,funct)
+         for i,v in pairs(str:GetChildren()) do
+                  funct(v)
+         end
+end
 
 T1:Toggle("Auto click",false,function(value)
     _G.click = value
@@ -113,12 +124,22 @@ lib:HookFunction(function(method,self,args)
     end
 end)
 
-T1:Toggle("Auto claim XP from pet training",false,function(value)
+T1:Toggle("Auto collect XP from obby",false,function(value)
          _G.XPpt = value
+         while wait() do
+                  if _G.XPpt == false then break end
+                           getChild(workspace["XPParts"],function(v)
+                                    Bring(v)
+                           end)
+         end
 end)
 
-workspace["XPParts"].ChildAdded:Connect(function(str)
-        if _G.XPpt == true then
-                  k
+T1:Toggle("Auto collect XP from obby",false,function(value)
+         _G.CoinsCol = value
+end)
+
+workspace["ClientCoinsGems"].ChildAdded:Connect(Function(itm)
+         if _G.CoinsCol == true then
+                  Bring(itm)
          end
 end)
