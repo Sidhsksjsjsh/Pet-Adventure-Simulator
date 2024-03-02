@@ -405,7 +405,7 @@ local aqindc = T7:Label("null")
 --aqindc:EditLabel("null")
 
 T7:Dropdown("Select quest type",{"Weekly","Hourly","Daily"},function(value)
-	_G.asqt = value or "Daily"
+	_G.asqt = value
 end)
 
 workspace["ClientCoinsGems"].ChildAdded:Connect(function(itm)
@@ -422,7 +422,7 @@ end)
 
 task.spawn(function()
 	while wait() do
-		aqindc:EditLabel("Arcane quest: (" .. _G.asqt .. ")\nQuest 1: " .. text(UI["ArcaneStarQuests"]["Frame"][_G.asqt]["Quest1"]["Quest"]) .. "\nQuest 2: " .. text(UI["ArcaneStarQuests"]["Frame"][_G.asqt]["Quest2"]["Quest"]) .. "\nQuest 3: " .. text(UI["ArcaneStarQuests"]["Frame"][_G.asqt]["Quest3"]["Quest"]) .. "\n" .. text(UI["ArcaneStarQuests"]["Frame"][_G.asqt]["Resettime"]))
+		aqindc:EditLabel("Arcane quest: (" .. tostring(_G.asqt or "Daily") .. ")\nQuest 1: " .. text(UI["ArcaneStarQuests"]["Frame"][_G.asqt]["Quest1"]["Quest"]) .. "\nQuest 2: " .. text(UI["ArcaneStarQuests"]["Frame"][_G.asqt]["Quest2"]["Quest"]) .. "\nQuest 3: " .. text(UI["ArcaneStarQuests"]["Frame"][_G.asqt]["Quest3"]["Quest"]) .. "\n" .. text(UI["ArcaneStarQuests"]["Frame"][_G.asqt]["Resettime"]))
 		aqinnpcq:EditLabel("NPC Name: " .. text(UI["NPCQuestUI"]["Dialog"]["NameText"]) .. "\nQuest: " .. text(UI["NPCQuestUI"]["Dialog"]["MainText"]) .. "\n" .. text(UI["NPCQuestUI"]["Dialog"]["RewardText"]))
 	end
 end)
