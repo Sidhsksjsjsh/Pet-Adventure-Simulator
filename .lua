@@ -6,6 +6,7 @@ local T3 = wndw:Tab("Pet Training")
 local T4 = wndw:Tab("Arcane Chest")
 local T5 = wndw:Tab("Quest")
 local T6 = wndw:Tab("ESP & Chest")
+local T7 = wndw:Tab("Arcane Quest")
 
 local user = game:GetService("Players").LocalPlayer
 local vendors = {}
@@ -14,6 +15,7 @@ local TweenService = game:GetService("TweenService")
 local camera = workspace.CurrentCamera
 local RunService = game:GetService("RunService")
 local normg = workspace.Gravity
+local UI = user.PlayerGui
 local npc = {}
 local esp = {
 	tracer = false,
@@ -41,6 +43,10 @@ local function NewLine()
     line.Thickness = 1.4
     line.Transparency = 0
     return line
+end
+
+local function text(str)
+	return str.Text
 end
 
 local function hitboxESP(str)
@@ -275,6 +281,14 @@ T1:Toggle("Auto collect XP from pet training",false,function(value)
          _G.CoinsCol = value
 end)
 
+T1:Toggle("Auto claim free shop rewards",false,function(value)
+         _G.fsr = value
+	while wait() do
+		if _G.fsr == false then break end
+			game:GetService("ReplicatedStorage")["Events"]["FreeRobloxShop"]:FireServer()
+	end
+end)
+
 local lab = {
 	["Chest Name"] = "StarterCrate",
 	["Chest Price"] = 5,
@@ -322,12 +336,27 @@ T4:Toggle("Open chest",false,function(value)
 	end
 end)
 
+local aqinnpcq = T5:Label("null")
+--aqinnpcq:EditLabel("null")
+
 T5:Dropdown("Select NPC",npc,function(value)
 	_G.QNPC = value
 end)
 
-T5:Button("AI NPC Quest Completed",function()
+--[[T5:Button("AI NPC Quest Completed [ BUG ]",function()
 	AI(_G.QNPC)
+end)
+]]
+T5:Toggle("Auto accept quest",false,function(value)
+	_G.accquest = value
+	while wait() do
+		if _G.accquest == false then break end
+			game:GetService("ReplicatedStorage")["Events"]["SendNPCQuestData"]:FireServer(_G.QNPC,"yes")
+	end
+end)
+
+T5:Button("Collect lost pet",function()
+	game:GetService("ReplicatedStorage")["Events"]["PlayerCollectedLostPet"]:FireServer(_G.QNPC)
 end)
 
 T6:Toggle("ESP hidden chest",false,function(value)
@@ -372,6 +401,13 @@ T6:Button("Tween collect all hidden chest",function()
 	workspace.Gravity = normg
 end)
 
+local aqindc = T7:Label("null")
+--aqindc:EditLabel("null")
+
+T7:Dropdown("Select quest type",{"Weekly","Hourly","Daily"},function(value)
+	_G.asqt = value or "Daily"
+end)
+
 workspace["ClientCoinsGems"].ChildAdded:Connect(function(itm)
          if _G.CoinsCol == true then
                   Bring(itm)
@@ -382,4 +418,11 @@ user["Character"]["HumanoidRootPart"]:GetPropertyChangedSignal("Position"):Conne
 	getChild(workspace["ClientCoinsGems"],function(v)
                 Bring(v)
         end)
+end)
+
+task.spawn(function()
+	while wait() do
+		aqindc:EditLabel("Arcane quest: (" .. _G.asqt .. ")\nQuest 1: " .. text(UI["ArcaneStarQuests"]["Frame"][_G.asqt]["Quest1"]["Quest"]) .. "\nQuest 2: " .. text(UI["ArcaneStarQuests"]["Frame"][_G.asqt]["Quest2"]["Quest"]) .. "\nQuest 3: " .. text(UI["ArcaneStarQuests"]["Frame"][_G.asqt]["Quest3"]["Quest"]) .. "\n" .. text(UI["ArcaneStarQuests"]["Frame"][_G.asqt]["Resettime"]))
+		aqinnpcq:EditLabel("NPC Name: " .. text(UI["NPCQuestUI"]["Dialog"]["NameText"]) .. "\nQuest: " .. text(UI["NPCQuestUI"]["Dialog"]["MainText"]) .. "\n" .. text(UI["NPCQuestUI"]["Dialog"]["RewardText"]))
+	end
 end)
