@@ -42,7 +42,7 @@ end -- UserWarning("Turtle AI are looking for stray or lost pets",{true,false,10
 
 local function AI(str)
 task.spawn(function()
-	if td.arg.am == 0 and then
+	if td.arg.am == 0 then
 		if workspace["QuestNPCs"]:FindFirstChild(str) then
 			UserWarning("Turtle AI was reading the dialogue of the quest given by the npc\nStart in 5s",{true,false,5})
 	                wait(5)
