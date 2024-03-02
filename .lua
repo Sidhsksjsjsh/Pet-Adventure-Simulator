@@ -12,7 +12,13 @@ local vendors = {}
 local workspace = game:GetService("Workspace")
 local TweenService = game:GetService("TweenService")
 local camera = workspace.CurrentCamera
+local RunService = game:GetService("RunService")
 local npc = {}
+local esp = {
+	tracer = true,
+	hitbox = true
+}
+
 local td = {
          arg = {
              str1 = "1",
@@ -23,6 +29,79 @@ local td = {
 
 lib:AddTable(workspace["EggVendors"],vendors)
 lib:AddTable(workspace["QuestNPCs"],npc)
+
+local function NewLine()
+    local line = Drawing.new("Line")
+    line.Visible = false
+    line.From = Vector2.new(0,0)
+    line.To = Vector2.new(1,1)
+    line.Color = Color3.fromRGB(0,255,50)
+    line.Thickness = 1.4
+    line.Transparency = 1
+    return line
+end
+
+local function hitboxESP(str)
+if esp.hitbox == true then
+	local espHITBOX = Instance.new("Highlight")
+	espHITBOX.Name = "Hitbox ESP"
+	espHITBOX.FillColor = Color3.new(0,1,0)
+	espHITBOX.OutlineColor = Color3.new(1,1,1)
+	espHITBOX.FillTransparency = 1
+	espHITBOX.OutlineTransparency = 0
+	espHITBOX.Adornee = str
+	espHITBOX.Parent = str
+	espHITBOX.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+end
+end
+
+local empt = nil
+for i,v in pairs(workspace["HiddenChests"]:GetDescendants()) do
+	if v.Name == "Sparkle" then
+		if empt then
+			empt:Disconnect()
+		end
+		
+		local lines = {
+			trace = NewLine()
+		}
+
+		local function esp()
+			local Scale = v.Size.Y/2
+			local Size = Vector3.new(2,3,1.5) * (Scale * 2)
+		    if esp.tracer == true then
+                        local trace = camera:WorldToViewportPoint((v.CFrame * CFrame.new(0,-Size.Y,0)).p)
+
+                        lines.trace.From = Vector2.new(camera.ViewportSize.X/2,camera.ViewportSize.Y)
+                        lines.trace.To = Vector2.new(trace.X,trace.Y)
+                    end
+		end
+		empt = RunService.RenderStepped:Connect(esp)
+	end
+end
+
+workspace["HiddenChests"].DescendantAdded:Connect(function(v)
+    if v.Name == "Sparkle" then
+	if empt then
+		empt:Disconnect()
+	end
+
+	local lines = {
+		trace = NewLine()
+	}
+
+	local function esp()
+		local Scale = v.Size.Y/2
+		local Size = Vector3.new(2,3,1.5) * (Scale * 2)
+		if esp.tracer == true then
+			local trace = camera:WorldToViewportPoint((v.CFrame * CFrame.new(0,-Size.Y,0)).p)
+                        lines.trace.From = Vector2.new(camera.ViewportSize.X/2,camera.ViewportSize.Y)
+                        lines.trace.To = Vector2.new(trace.X,trace.Y)
+                end
+	end
+		empt = RunService.RenderStepped:Connect(esp)
+    end
+end)
 
 local function Bring(part)
 	TweenService:Create(part,TweenInfo.new(1,Enum.EasingStyle.Linear,Enum.EasingDirection.Out,0,false,0),{CFrame = user.Character.HumanoidRootPart.CFrame}):Play()
@@ -233,6 +312,10 @@ end)
 
 T5:Button("AI NPC Quest Completed",function()
 	AI(_G.QNPC)
+end)
+
+T6:Toggle("ESP hidden chest",false,function(value)
+	k
 end)
 
 workspace["ClientCoinsGems"].ChildAdded:Connect(function(itm)
