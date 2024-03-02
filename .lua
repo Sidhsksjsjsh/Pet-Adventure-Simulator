@@ -134,7 +134,7 @@ T1:Toggle("Auto collect XP from obby",false,function(value)
          end
 end)
 
-T1:Toggle("Auto collect XP from obby",false,function(value)
+T1:Toggle("Auto collect XP from pet training",false,function(value)
          _G.CoinsCol = value
 end)
 
